@@ -15,6 +15,13 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  afterAll(async () => {
+    // A workaround to avoid jest hand with bull queue
+    await new Promise(resolve => setTimeout(resolve, 50))
+    // We need to close the app, to release all resources(redis connections)
+    await app.close()
+  });
+
   it('/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/')
